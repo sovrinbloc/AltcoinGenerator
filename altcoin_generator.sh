@@ -335,6 +335,7 @@ newcoin_replace_vars()
 
 
     #EXCLUDED
+  # $SED -i "s/8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573/$TEST_GENESIS_HASH/" $FILE
   # $SED -i "s/1516406749/1486949366/" $FILE
   # $SED -i "s/794057/0/" $FILE
   # $SED -i "s/0.01/0/" $FILE
