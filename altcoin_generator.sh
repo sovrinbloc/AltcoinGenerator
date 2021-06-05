@@ -293,6 +293,8 @@ newcoin_replace_vars()
     $SED -i "s/{0x04, 0x35, 0x87, 0xCF}/{0x04, 0x74, 0x73, 0x4E}/" $FILE   #w
     $SED -i "s/{0x04, 0x35, 0x83, 0x94}/{0x04, 0x47, 0x4D, 0x4F}/" $FILE #w
 
+    0x04, 0x49, 0x41, 0x4D
+
 
   FILE="bitcoinunits.cpp"
   LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/lites/psuxai/ {} + && \
@@ -320,8 +322,8 @@ newcoin_replace_vars()
 
 
     $SED -i "s/1,48);/1,78);/" $FILE
-    $SED -i "s/{0x04, 0x88, 0xB2, 0x1E}/{0x04, 0x49, 0x41, 0x4D}/" $FILE
-    $SED -i "s/{0x04, 0x88, 0xAD, 0xE4}/{0x04, 0x47, 0x4F, 0x44}/" $FILE
+    #$SED -i "s/{0x04, 0x88, 0xB2, 0x1E}/{0x04, 0x49, 0x41, 0x4D}/" $FILE
+    #$SED -i "s/{0x04, 0x88, 0xAD, 0xE4}/{0x04, 0x47, 0x4F, 0x44}/" $FILE
     FIND='nPowTargetSpacing = 2.5'
     REPLACE='nPowTargetSpacing = 7.4'
     $SED -i "s/$FIND/$REPLACE/" $FILE
@@ -330,20 +332,24 @@ newcoin_replace_vars()
     $SED -i "s/$FIND/$REPLACE/" $FILE
 
 
-    $SED -r "s,,," $FILE
 
 
 
     #EXCLUDED
     TEST_GENESIS_HASH=fb28d1f904e757e296cd334f4f551c94d7dc5770615cc40566c7fdc1eb801b66 ##THIS LINE FOR TESTING ONLY 
-   #$SED -i "s/0x000000000000000000000000000000000000000000000000df7b5aa1700ce/0x00/" $FILE
-   #$SED -i "s/8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573/$TEST_GENESIS_HASH/" $FILE
-   #$SED -i "s/17748a31ba97afdc9a4f86837a39d287e3e7c7290a08a1d816c5969c78a83289/$TEST_GENESIS_HASH/" $FILE
+
+    #WORKS
+   $SED -i "s/0x000000000000000000000000000000000000000000000000df7b5aa1700ce/0x00/" $FILE
+   $SED -i "s/8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573/$TEST_GENESIS_HASH/" $FILE
+   $SED -i "s/17748a31ba97afdc9a4f86837a39d287e3e7c7290a08a1d816c5969c78a83289/$TEST_GENESIS_HASH/" $FILE
+   $SED -i "s/2056, /0, /" $FILE 
+
+   #WORKS
    $SED -i "s/1516406749/1486949366/" $FILE
    $SED -i "s/794057/0/" $FILE #works
    $SED -i "s/0.01/0/" $FILE #works
    $SED -i "s/76;/0;/" $FILE #works
-   $SED -i "s/2056, /0, /" $FILE 
+   
 
 
   $SED -i "s/1516406833/$TIMESTAMP/" $FILE
@@ -357,13 +363,14 @@ newcoin_replace_vars()
                 { 0, uint256S(\"0x$MAIN_GENESIS_HASH\")},
              }
         };"
+        read
 
 
-  #   echo "checkpointData = {
-  #           {
-  #               { 0, uint256S(\"$TEST_GENESIS_HASH\")},
-  #           }
-  #       };"
+    echo "checkpointData = {
+            {
+                { 0, uint256S(\"$TEST_GENESIS_HASH\")},
+            }
+        };"
 
 
 
