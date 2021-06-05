@@ -27,8 +27,8 @@ LITECOIN_MERKLE_HASH=97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd
 LITECOIN_MAIN_GENESIS_HASH=12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2
 LITECOIN_TEST_GENESIS_HASH=4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0
 LITECOIN_REGTEST_GENESIS_HASH=530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9
-MINIMUM_CHAIN_WORK_MAIN=0x0000000000000000000000000000000000000000000002ee655bf00bf13b4cca
-MINIMUM_CHAIN_WORK_TEST=0x0000000000000000000000000000000000000000000000000035ed7ece35dc93
+MINIMUM_CHAIN_WORK_MAIN=0x0000000000000000000000000000000000000000000000c1bfe2bbe614f41260
+MINIMUM_CHAIN_WORK_TEST=0x000000000000000000000000000000000000000000000000001df7b5aa1700ce
 COIN_NAME_LOWER=$(echo $COIN_NAME | tr '[:upper:]' '[:lower:]')
 COIN_NAME_UPPER=$(echo $COIN_NAME | tr '[:lower:]' '[:upper:]')
 COIN_UNIT_LOWER=$(echo $COIN_UNIT | tr '[:upper:]' '[:lower:]')
@@ -284,14 +284,14 @@ newcoin_replace_vars()
 
   FILE=src/chainparams.cpp
 
-  $SED -i "s/0xfd;/0x69;/" $FILE
-    $SED -i "s/0xd2;/0x6e;/" $FILE
-    $SED -i "s/0xc8;/0x61;/" $FILE
-    $SED -i "s/0xf1;/0x72;/" $FILE
-    $SED -i "s/1,111);/1,77);/" $FILE
-    $SED -i "s/1,239)/1,77);/" $FILE
-    $SED -i "s/{0x04, 0x35, 0x87, 0xCF}/{0x04, 0x74, 0x73, 0x4E}/" $FILE
-    $SED -i "s/{0x04, 0x35, 0x83, 0x94}/{0x04, 0x47, 0x4D, 0x4F}/" $FILE
+  $SED -i "s/0xfd;/0x69;/" $FILE #works
+    $SED -i "s/0xd2;/0x6e;/" $FILE #works
+    $SED -i "s/0xc8;/0x61;/" $FILE #works
+    $SED -i "s/0xf1;/0x72;/" $FILE #works
+    $SED -i "s/1,111);/1,77);/" $FILE #w
+    $SED -i "s/1,239)/1,77);/" $FILE #w
+    $SED -i "s/{0x04, 0x35, 0x87, 0xCF}/{0x04, 0x74, 0x73, 0x4E}/" $FILE   #w
+    $SED -i "s/{0x04, 0x35, 0x83, 0x94}/{0x04, 0x47, 0x4D, 0x4F}/" $FILE #w
 
 
   FILE="bitcoinunits.cpp"
@@ -309,28 +309,28 @@ newcoin_replace_vars()
   $SED -i "s|$FIND|$REPLACE|" $FILE
 
 
-  $SED -i "s/0xfb;/0x67;/" $FILE
-    $SED -i "s/0xc0;/0x6f;/" $FILE
-    $SED -i "s/0xb6;/0x64;/" $FILE
-    $SED -i "s/0xdb;/0x73;/" $FILE
+# never modified?
+    FILE="src/chainparams.cpp"
+    $SED -i "s/0xfb;/0x67;/g" $FILE #never modified
+    $SED -i "s/1,176);/1,78);/g" $FILE #never modified
+    $SED -i "s/0xc0;/0x6f;/g" $FILE #
+    $SED -i "s/0xb6;/0x64;/g" $FILE #
+    $SED -i "s/0xdb;/0x73;/g" $FILE #
+
+
+
     $SED -i "s/1,48);/1,78);/" $FILE
-    $SED -i "s/1,176)/1,78);/" $FILE
     $SED -i "s/{0x04, 0x88, 0xB2, 0x1E}/{0x04, 0x49, 0x41, 0x4D}/" $FILE
     $SED -i "s/{0x04, 0x88, 0xAD, 0xE4}/{0x04, 0x47, 0x4F, 0x44}/" $FILE
-
-
-
-    FILE="src/chainparams.cpp"
     FIND='nPowTargetSpacing = 2.5'
     REPLACE='nPowTargetSpacing = 7.4'
-
     $SED -i "s/$FIND/$REPLACE/" $FILE
     FIND='nPowTargetTimespan = 3.5'
     REPLACE='nPowTargetTimespan = 10'
-
     $SED -i "s/$FIND/$REPLACE/" $FILE
 
 
+    $SED -r "s,,," $FILE
 
 
 
@@ -340,21 +340,18 @@ newcoin_replace_vars()
   # $SED -i "s/0.01/0/" $FILE
   # $SED -i "s/76;/0;/" $FILE
 
-  # $SED -i "s/0x000000000000000000000000000000000000000000000000001df7b5aa1700ce/0x00/" $FILE
 
-
-  # $SED -i "s/0x0000000000000000000000000000000000000000000000c1bfe2bbe614f41260/0x00/" $FILE
-  # $SED -i "s/19831879/0/" $FILE
-  # $SED -i "s/1516406833/$TIMESTAMP/" $FILE
-  # $SED -i "s/0.06/0/" $FILE
+  $SED -i "s/1516406833/$TIMESTAMP/" $FILE
+  $SED -i "s/19831879/0/" $FILE
+  $SED -i "s/0.06/0/" $FILE
 
   # echo "You must manually replace checkpointData = {...}; in src/chainparams.cpp"
   #   echo "with..."
-  #   echo "checkpointData = {
-  #           {
-  #               { 0, uint256S(\"$MAIN_GENESIS_HASH\")},
-  #           }
-  #       };"
+    echo "checkpointData = {
+             {
+                { 0, uint256S(\"0x$MAIN_GENESIS_HASH\")},
+             }
+        };"
 
 
   #   echo "checkpointData = {
@@ -455,9 +452,9 @@ case $1 in
             echo "There are nodes running. Please stop them first with: $0 stop"
             exit 1
         fi
-        docker_build_image
-        generate_genesis_block
-        newcoin_replace_vars
+        #docker_build_image
+        #generate_genesis_block
+        #newcoin_replace_vars
         build_new_coin
         docker_create_network
 
