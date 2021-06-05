@@ -1,37 +1,22 @@
-#!/bin/bash -e
-# This script is an experiment to clone litecoin into a 
-# brand new coin + blockchain.
-# The script will perform the following steps:
-# 1) create first a docker image with ubuntu ready to build and run the new coin daemon
-# 2) clone GenesisH0 and mine the genesis blocks of main, test and regtest networks in the container (this may take a lot of time)
-# 3) clone litecoin
-# 4) replace variables (keys, merkle tree hashes, timestamps..)
-# 5) build new coin
-# 6) run 4 docker nodes and connect to each other
-# 
-# By default the script uses the regtest network, which can mine blocks
-# instantly. If you wish to switch to the main network, simply change the 
-# CHAIN variable below
-
 # change the following variables to match your new coin
-COIN_NAME="MyCoin"
-COIN_UNIT="MYC"
+COIN_NAME="IAmCoin"
+COIN_UNIT="IAM"
 # 42 million coins at total (litecoin total supply is 84000000)
-TOTAL_SUPPLY=42000000
-MAINNET_PORT="54321"
-TESTNET_PORT="54322"
-PHRASE="Some newspaper headline that describes something that happened today"
+TOTAL_SUPPLY=74000000
+MAINNET_PORT="9123"
+TESTNET_PORT="19123"
+PHRASE="17/May/2021 Report on government knowledge of UFOs to be turned over to Senate June 1"
 # First letter of the wallet address. Check https://en.bitcoin.it/wiki/Base58Check_encoding
-PUBKEY_CHAR="20"
+PUBKEY_CHAR="78"
 # number of blocks to wait to be able to spend coinbase UTXO's
-COINBASE_MATURITY=100
+COINBASE_MATURITY=3
 # leave CHAIN empty for main network, -regtest for regression network and -testnet for test network
-CHAIN="-regtest"
+CHAIN=""
 # this is the amount of coins to get as a reward of mining the block of height 1. if not set this will default to 50
-#PREMINED_AMOUNT=10000
+PREMINED_AMOUNT=10000
 
 # warning: change this to your own pubkey to get the genesis block mining reward
-GENESIS_REWARD_PUBKEY=044e0d4bc823e20e14d66396a64960c993585400c53f1e6decb273f249bfeba0e71f140ffa7316f2cdaaae574e7d72620538c3e7791ae9861dfe84dd2955fc85e8
+GENESIS_REWARD_PUBKEY=04eb187d0b5edf565cc14b0bc3e753249e82ad2b9aba4a35baeb593a34bb0e0a8dd28e5824764d17be07167eeb768a74d098b18d4b3c7a13612b1d5770773b916e
 
 # dont change the following variables unless you know what you are doing
 LITECOIN_BRANCH=0.16
@@ -42,8 +27,8 @@ LITECOIN_MERKLE_HASH=97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd
 LITECOIN_MAIN_GENESIS_HASH=12a765e31ffd4059bada1e25190f6e98c99d9714d334efa41a195a7e7e04bfe2
 LITECOIN_TEST_GENESIS_HASH=4966625a4b2851d9fdee139e56211a0d88575f59ed816ff5e6a63deb4e3e29a0
 LITECOIN_REGTEST_GENESIS_HASH=530827f38f93b43ed12af0b3ad25a288dc02ed74d6d7857862df51fc56c416f9
-MINIMUM_CHAIN_WORK_MAIN=0x0000000000000000000000000000000000000000000000c1bfe2bbe614f41260
-MINIMUM_CHAIN_WORK_TEST=0x000000000000000000000000000000000000000000000000001df7b5aa1700ce
+MINIMUM_CHAIN_WORK_MAIN=0x0000000000000000000000000000000000000000000002ee655bf00bf13b4cca
+MINIMUM_CHAIN_WORK_TEST=0x0000000000000000000000000000000000000000000000000035ed7ece35dc93
 COIN_NAME_LOWER=$(echo $COIN_NAME | tr '[:upper:]' '[:lower:]')
 COIN_NAME_UPPER=$(echo $COIN_NAME | tr '[:lower:]' '[:upper:]')
 COIN_UNIT_LOWER=$(echo $COIN_UNIT | tr '[:upper:]' '[:lower:]')
@@ -288,6 +273,106 @@ newcoin_replace_vars()
     # defaultAssumeValid
     $SED -i "s/0x66f49ad85624c33e4fd61aa45c54012509ed4a53308908dd07f56346c7939273/0x$MAIN_GENESIS_HASH/" src/chainparams.cpp
     $SED -i "s/0x1efb29c8187d5a496a33377941d1df415169c3ce5d8c05d055f25b683ec3f9a3/0x$TEST_GENESIS_HASH/" src/chainparams.cpp
+
+
+
+
+
+
+
+
+
+  FILE=src/chainparams.cpp
+
+  $SED -i "s/0xfd;/0x69;/" $FILE
+    $SED -i "s/0xd2;/0x6e;/" $FILE
+    $SED -i "s/0xc8;/0x61;/" $FILE
+    $SED -i "s/0xf1;/0x72;/" $FILE
+    $SED -i "s/1,111);/1,77);/" $FILE
+    $SED -i "s/1,239)/1,77);/" $FILE
+    $SED -i "s/{0x04, 0x35, 0x87, 0xCF}/{0x04, 0x74, 0x73, 0x4E}/" $FILE
+    $SED -i "s/{0x04, 0x35, 0x83, 0x94}/{0x04, 0x47, 0x4D, 0x4F}/" $FILE
+
+
+  FILE="bitcoinunits.cpp"
+  LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/lites/psuxai/ {} + && \
+    LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/photons/elohim/ {} + && \
+    LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/litoshi/daemonai/ {} + && \
+    LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/Lites/Psuxai/ {} + && \
+    LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/Photons/Elohim/ {} + && \
+    LC_ALL=C find . -type f -name "*$FILE" -exec sed -i '' s/Litoshi/Daemonai/ {} +
+
+    
+  FILE="src/chainparamsseeds.h"
+  FIND='{{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00'
+  REPLACE='//{{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00'
+  $SED -i "s|$FIND|$REPLACE|" $FILE
+
+
+  $SED -i "s/0xfb;/0x67;/" $FILE
+    $SED -i "s/0xc0;/0x6f;/" $FILE
+    $SED -i "s/0xb6;/0x64;/" $FILE
+    $SED -i "s/0xdb;/0x73;/" $FILE
+    $SED -i "s/1,48);/1,78);/" $FILE
+    $SED -i "s/1,176)/1,78);/" $FILE
+    $SED -i "s/{0x04, 0x88, 0xB2, 0x1E}/{0x04, 0x49, 0x41, 0x4D}/" $FILE
+    $SED -i "s/{0x04, 0x88, 0xAD, 0xE4}/{0x04, 0x47, 0x4F, 0x44}/" $FILE
+
+
+
+    FILE="src/chainparams.cpp"
+    FIND='nPowTargetSpacing = 2.5'
+    REPLACE='nPowTargetSpacing = 7.4'
+
+    $SED -i "s/$FIND/$REPLACE/" $FILE
+    FIND='nPowTargetTimespan = 3.5'
+    REPLACE='nPowTargetTimespan = 10'
+
+    $SED -i "s/$FIND/$REPLACE/" $FILE
+
+
+
+
+
+    #EXCLUDED
+  # $SED -i "s/1516406749/1486949366/" $FILE
+  # $SED -i "s/794057/0/" $FILE
+  # $SED -i "s/0.01/0/" $FILE
+  # $SED -i "s/76;/0;/" $FILE
+
+  # $SED -i "s/0x000000000000000000000000000000000000000000000000001df7b5aa1700ce/0x00/" $FILE
+
+
+  # $SED -i "s/0x0000000000000000000000000000000000000000000000c1bfe2bbe614f41260/0x00/" $FILE
+  # $SED -i "s/19831879/0/" $FILE
+  # $SED -i "s/1516406833/$TIMESTAMP/" $FILE
+  # $SED -i "s/0.06/0/" $FILE
+
+  # echo "You must manually replace checkpointData = {...}; in src/chainparams.cpp"
+  #   echo "with..."
+  #   echo "checkpointData = {
+  #           {
+  #               { 0, uint256S(\"$MAIN_GENESIS_HASH\")},
+  #           }
+  #       };"
+
+
+  #   echo "checkpointData = {
+  #           {
+  #               { 0, uint256S(\"$TEST_GENESIS_HASH\")},
+  #           }
+  #       };"
+
+
+
+
+
+  #   echo "checkpointData = {
+  #           {
+  #               { 0, uint256S(\"$REGTEST_GENESIS_HASH\")},
+  #           }
+  #       };"
+  #   echo "Press enter when you have finished adding it."
 
     # TODO: fix checkpoints
     popd
